@@ -1,9 +1,7 @@
 # app.py
 from flask import Flask
-import os
 from pandas import DataFrame
 import threading
-import json
 from constants import run_websocket
 
 def create_app():
