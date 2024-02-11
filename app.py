@@ -1,9 +1,11 @@
 # app.py
 from flask import Flask
-from pandas import DataFrame
-import threading
+from utils.backtesting import run_backtest
 from websockets.kraken_websocket import run_kraken_websocket
-from datarequests.get_historic_data import kline
+from strategies.sma_strategy import simple_ma_strategy
+from datarequests.get_historic_data import get_historic_data
+from indicators.sma import calculate_moving_average
+
 def create_app():
     app = Flask(__name__)
 
@@ -12,7 +14,20 @@ def create_app():
         return app.send_static_file("index.html")
     @app.route("/backtest")
     def backtest():
-       return print(kline)
+        start_date = " 01 Jan 2022 00:00:00"
+        end_date = " 01 Feb 2022 23:59:59"
+        raw_data = get_historic_data(symbol='BTCUSDT', interval='1m', start_str=start_date.strip(), end_str=end_date.strip())        
+        formatted_data = [{
+            'timestamp': data_point[0],
+            'open': float(data_point[1]),
+            'high': float(data_point[2]),
+            'low': float(data_point[3]),
+            'close': float(data_point[4]),
+        } for data_point in raw_data]
+        
+        trades = run_backtest(simple_ma_strategy, formatted_data)        
+        print(trades)    
+        return app.send_static_file("index.html")
 
         
 

@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-def get_binance_historic_klines(symbol='BTCUSDT', interval='1m', start_str=None, end_str=None):
+def get_historic_data(symbol='BTCUSDT', interval='1m', start_str=None, end_str=None):
     """
     Retrieves historic Kline data from Binance for a specified symbol and time interval.
 
@@ -31,11 +31,3 @@ def get_binance_historic_klines(symbol='BTCUSDT', interval='1m', start_str=None,
     data = response.json()
     return data
 
-# Example usage:
-start_str = "01 Jan 2021 00:00:00"
-end_str = "01 Feb 2021 00:00:00"
-klines = get_binance_historic_klines('BTCUSDT', '1m', start_str, end_str)
-
-for kline in klines[:5]:  # Print first 5 entries
-    open_time = datetime.datetime.fromtimestamp(kline[0] / 1000)
-    print(f"Open Time: {open_time}, Open: {kline[1]}, High: {kline[2]}, Low: {kline[3]}, Close: {kline[4]}")
